@@ -244,3 +244,76 @@ Promise是ES6提供的一种异步解决方案, 它允许将写法复杂的传�
 	    console.log(err)
 	  })
 ```
+
+## 6. Promise的静态方法
+	
+### **Promise.resolve**
+	
+返回一个 `fulfilled` 状态的 `promise` 对象
+	
+```js
+	Promise.resolve('dz').then(res => { console.log(res) })// --> dz
+	// 相当于
+	new Promise((resolve) => {resolve('dz')}).then(res => { console.log(res) }) // --> dz
+```
+	
+	
+### **Promise.reject**
+	
+返回一个 `rejected` 状态的 `promise` 对象
+	
+### **Promise.all**
+	
+`Promise.all` 可以将多个 `Promise` 实例包装成一个新的 `Promise` 实例。同时，成功和失败的返回值是不同的，成功的时候返回的是一个结果数组，而失败的时候则返回最先被 `reject` 失败状态的值
+	
+```js
+let p1 = new Promise((resolve, reject) => {
+  resolve('成功了')
+})
+let p2 = new Promise((resolve, reject) => {
+  resolve('success')
+})
+let p3 = Promse.reject('失败')
+	Promise.all([p1, p2]).then((result) => {
+  console.log(result)               //['成功了', 'success']
+}).catch((error) => {
+  console.log(error)
+})
+Promise.all([p1,p3,p2]).then((result) => {
+  console.log(result)
+}).catch((error) => {
+  console.log(error)      // 失败了，打出 '失败'
+})
+```
+	
+### **Promise.race**
+	
+`Promise.race([p1, p2, p3])` 里面哪个结果获得的快，就返回那个结果，不管结果本身是成功状态还是失败状态。
+	
+```js
+let p1 = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve('success')
+  },1000)
+})
+	let p2 = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    reject('failed')
+  }, 500)
+})
+	Promise.race([p1, p2]).then((result) => {
+  console.log(result)
+}).catch((error) => {
+  console.log(error)  // 打开的是 'failed'
+})
+```
+	
+### **finally**
+	
+无论 `Promise` 返回的结果是什么都会执行  `finally` 并且 不会改变 `Promise` 的状态
+	
+```js
+Promise.resolve(1).finally(()=>{})
+Promise.reject(1) .finally(()=>{})
+```
+
